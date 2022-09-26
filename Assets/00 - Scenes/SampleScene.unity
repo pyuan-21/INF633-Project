@@ -694,6 +694,7 @@ GameObject:
   - component: {fileID: 374040442}
   - component: {fileID: 374040440}
   - component: {fileID: 374040441}
+  - component: {fileID: 374040443}
   m_Layer: 0
   m_Name: Terrain
   m_TagString: Ground
@@ -844,6 +845,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9c3fedfa59acc14e8fb72fb671a0f52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &374040443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 374040426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac82ef529a79ace4e98628590dcd03e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHeight: 5
 --- !u!1 &534669902
 GameObject:
   m_ObjectHideFlags: 0
@@ -1925,7 +1939,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2137751596}
-  m_LocalRotation: {x: 0.09467271, y: 0.4793379, z: -0.052104156, w: 0.870952}
+  m_LocalRotation: {x: 0.09467273, y: 0.4793379, z: -0.05210416, w: 0.870952}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
