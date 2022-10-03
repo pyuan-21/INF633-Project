@@ -44,4 +44,6 @@ abstract public class Brush : MonoBehaviour {
     }
     public abstract void draw(float x, float z);
     public abstract void draw(int x, int z);
+    public virtual void onMouseLeftBtnPressed() { }
+    public virtual void onMouseLeftBtnReleased() { }
 }
