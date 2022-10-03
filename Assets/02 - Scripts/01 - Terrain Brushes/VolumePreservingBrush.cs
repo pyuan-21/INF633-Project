@@ -4,46 +4,47 @@ using UnityEngine;
 
 
 public class VolumePreservingBrush : TerrainBrush {
-    private bool prePressed = false; // previous state of pressing the mouse left button
-    private bool isPressing = false; // current state of pressing the mouse left button
-    private List<float> heightData = new List<float>();
-    public override void onMouseLeftBtnPressed()
-    {
-        isPressing = true;
-    }
-
-    public override void onMouseLeftBtnReleased()
-    {
-        isPressing = false;
-        prePressed = false;
-        heightData.Clear();
-    }
-
-
+    public bool isRecord = true;
+    private Dictionary<System.ValueTuple<int, int>, float> recordHeightData = new Dictionary<(int, int), float>();
+    private int lastRadius = 0;
+    private List<System.ValueTuple<int, int>> lastAreaInfo = new List<(int, int)>();
     public override void draw(int x, int z) {
-        if (!prePressed)
+        if (isRecord)
         {
-            // first pressed
+            recordHeightData.Clear();
+            lastAreaInfo.Clear();
+
             for (int zi = -radius; zi <= radius; zi++)
             {
                 for (int xi = -radius; xi <= radius; xi++)
                 {
-                    heightData.Add(terrain.get(x + xi, z + zi));
+                    recordHeightData.Add(new(xi, zi), terrain.get(x + xi, z + zi));
+                    lastAreaInfo.Add(new(x + xi, z + zi));
                 }
             }
-            prePressed = true;
+            lastRadius = radius;
         }
         else
         {
-            //TODO: not using the "isPressing", and move should remove the original area, and the data will be applied to the new area.
-            //TODO: therefore we need to restore the area as well.
-            int i = 0;
+            // first clear the last area, then move it to new area
+            foreach(var e in lastAreaInfo)
+            {
+                terrain.set(e.Item1, e.Item2, 0);
+            }
+            lastAreaInfo.Clear();
+
+            // copy the data to the destination area
             for (int zi = -radius; zi <= radius; zi++)
             {
+                if (zi < -lastRadius || zi > lastRadius)
+                    continue; // out of previous data's range
                 for (int xi = -radius; xi <= radius; xi++)
                 {
-                    terrain.set(x + xi, z + zi, heightData[i]);
-                    i++;
+                    if (xi < -lastRadius || xi > lastRadius)
+                        continue; // out of previous data's range
+
+                    terrain.set(x + xi, z + zi, recordHeightData[new(xi, zi)]);
+                    lastAreaInfo.Add(new(x + xi, z + zi));
                 }
             }
         }

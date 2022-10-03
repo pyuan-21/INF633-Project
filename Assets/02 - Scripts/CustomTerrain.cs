@@ -91,12 +91,7 @@ public class CustomTerrain : MonoBehaviour {
                 do_draw_target = true;
             if (Input.GetMouseButton(0)) {
                 debug.text = "Coords: " + hit_loc.ToString();
-                current_brush?.onMouseLeftBtnPressed();
                 current_brush?.callDraw(hit_loc.x, hit_loc.z);
-            }
-            else
-            {
-                current_brush?.onMouseLeftBtnReleased();
             }
         }
         drawTarget(hit_loc, do_draw_target);
