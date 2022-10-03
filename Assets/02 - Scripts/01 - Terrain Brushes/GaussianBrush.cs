@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GaussianBrush : TerrainBrush {
 
+    public bool isIncreasing = true;
     public float maxHeight = 5;
     public float varianceX = 10;
     public float varianceY = 10;
@@ -16,7 +17,10 @@ public class GaussianBrush : TerrainBrush {
         for (int zi = -radius; zi <= radius; zi++) {
             for (int xi = -radius; xi <= radius; xi++) {
                 float height = terrain.get(x + xi, z + zi);
-                height += Gaussian2D(xi, zi);
+                if (isIncreasing)
+                    height += Mathf.Max(Gaussian2D(xi, zi), 0);
+                else
+                    height -= Mathf.Max(Gaussian2D(xi, zi), 0);
                 terrain.set(x + xi, z + zi, height);
             }
         }
