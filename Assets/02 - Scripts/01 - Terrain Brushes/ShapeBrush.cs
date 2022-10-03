@@ -9,7 +9,6 @@ public enum BrushShape
 }
 public class ShapeBrush : TerrainBrush {
     public bool fixedHeight = true;
-    public bool isIncreasing = true;
     public float incrementalHeight = 5;
     public BrushShape shapeType = BrushShape.SQUARE;
     public override void draw(int x, int z) {
@@ -29,10 +28,7 @@ public class ShapeBrush : TerrainBrush {
                 else
                 {
                     float height = terrain.get(x + xi, z + zi);
-                    if (isIncreasing)
-                        height += incrementalHeight;
-                    else
-                        height -= incrementalHeight;
+                    height += incrementalHeight;
                     terrain.set(x + xi, z + zi, height);
                 }
             }
