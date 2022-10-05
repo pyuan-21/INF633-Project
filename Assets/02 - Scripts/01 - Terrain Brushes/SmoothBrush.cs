@@ -14,6 +14,8 @@ public class SmoothBrush : TerrainBrush {
         int maxX = x + radius;
         int minZ = z - radius;
         int maxZ = z + radius;
+        List<System.ValueTuple<int, int, float>> smoothDataList = new List<(int, int, float)>();
+        // Calculate the smoothe height first, then set the height by using this value
         for (int zi = -radius; zi <= radius; zi++) {
             for (int xi = -radius; xi <= radius; xi++) {
                 // convolution
@@ -29,9 +31,13 @@ public class SmoothBrush : TerrainBrush {
                         height += gaussianKernel[i + 1 + (j + 1) * 3] * terrain.get(curX, curY);
                     }
                 }
-                terrain.set(x + xi, z + zi, height);
-
+                smoothDataList.Add(new(x + xi, z + zi, height)); // store it
             }
+        }
+
+        foreach(var data in smoothDataList)
+        {
+            terrain.set(data.Item1, data.Item2, data.Item3);
         }
     }
 }
