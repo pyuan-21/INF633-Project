@@ -17,7 +17,7 @@ public class PerlinNoiseBrush : TerrainBrush
                 float perlinnoise = Mathf.PerlinNoise(xi, zi);
                 float terrainheight = terrain.get(x + xi, z + zi);
 
-                terrain.set(x + xi, z + zi, perlinnoise);
+                terrain.set(x + xi, z + zi, terrainheight + perlinnoise);
 
                 //System.Console.WriteLine(height * gaussian);
 

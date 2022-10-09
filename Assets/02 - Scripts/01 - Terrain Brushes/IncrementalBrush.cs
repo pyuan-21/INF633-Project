@@ -2,17 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IncrementalBrush : MonoBehaviour
+public class IncrementalBrush : TerrainBrush
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public float sigma = 1f;
+    public float height = 5;
 
-    // Update is called once per frame
-    void Update()
+    // incremental gaussian
+    public override void draw(int x, int z)
     {
-        
+        for (int zi = -radius; zi <= radius; zi++)
+        {
+            for (int xi = -radius; xi <= radius; xi++)
+            {
+               
+                float terrainheight = terrain.get(x + xi, z + zi);
+                terrain.set(x + xi, z + zi, terrainheight + 1);
+
+                //System.Console.WriteLine(height * gaussian);
+
+            }
+        }
+
+
     }
 }

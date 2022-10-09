@@ -13,7 +13,7 @@ public class MinimalDistanceBrush : InstanceBrush
             for (float xi = -radius; xi <= radius; xi++)
             {
 
-               spawnObject(x + xi+distance, z + zi);
+               spawnObject(x + xi+distance, z + zi+distance);
 
 
             }
