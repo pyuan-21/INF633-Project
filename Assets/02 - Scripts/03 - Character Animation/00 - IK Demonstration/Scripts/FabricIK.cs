@@ -71,10 +71,10 @@ public class FabricIK : MonoBehaviour
             // START TODO ###################
 
             // Just a placeholder. Change with the correct transform!
-            bones[i] = transform.parent;
 
-            // bones[i] = ...
-            // startingBoneRotation[i] = ...
+
+            bones[i] = current;
+            startingBoneRotation[i] = current.rotation;
 
             // END TODO ###################
 
@@ -96,8 +96,10 @@ public class FabricIK : MonoBehaviour
             {
                 // START TODO ###################
 
-                // bonesLength[i] = ...
-                // completeLength += ...
+                // mid-bones
+                bonesLength[i] = bones[i + 1].position.magnitude -current.position.magnitude;
+                //leaf bones
+                completeLength += bones[i].position.magnitude;
 
                 // END TODO ###################
 
@@ -157,10 +159,18 @@ public class FabricIK : MonoBehaviour
 
         // START TODO ###################
 
-        // Change condition!
-        if (true)
+        // Change condition = Distance from bones[0] to target is larger than the length of the entire chain
+        bool condition = (target.position - bones[0].position).magnitude> completeLength;
+        if (condition)
         {
-            // bonesPositions[i] = ...
+            // The updated root bone position (bonesPositions[0]) should not change => i=1
+            for (int i=1; i< bones.Length; i++)
+            {
+                //The other bones positions will be equal to the position of the previous bone plus the direction to the target * length of the bone
+                // we  normalise because we need just the direction
+                bonesPositions[i] = bonesPositions[i-1]+((target.position - bones[i].position).normalized) * bonesLength[i-1];
+            }
+            
         }
 
         // END TODO ###################
@@ -195,10 +205,12 @@ public class FabricIK : MonoBehaviour
 
                     // START TODO ###################
 
-                    // if...
-                    //     bonesPositions[i] = ...
-                    // else...
-                    //     bonesPositions[i] = ...
+                    // if the index belongs to the end-effector
+                    if (i==bonesLength.Length -1)
+                        bonesPositions[i] =target.position ;
+                    else 
+                         // inverse loop
+                         bonesPositions[i] = bonesPositions[i+1]+ bonesLength[i + 1] * ((target.position- bonesPositions[i+1]).normalized);
 
                     // END TODO ###################
                 }
@@ -212,7 +224,7 @@ public class FabricIK : MonoBehaviour
 
                     // START TODO ###################
 
-                    // bonesPositions[i] = ...
+                    bonesPositions[i] = bonesPositions[i-1] + bonesLength[i-1] * ((target.position - bonesPositions[i-1]).normalized);
 
                     // END TODO ###################
 
