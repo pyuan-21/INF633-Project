@@ -15,8 +15,6 @@ public class BaseInstanceBrush :InstanceBrush
 {
         float height = terrain.get(x, z);
 
-       
-
         // steepness
         if (1f < terrain.getSteepness(x, z)){
             return;
@@ -38,8 +36,6 @@ public class BaseInstanceBrush :InstanceBrush
             
         }
        
-
-        //Instantiate(terrain.object_prefab);
         spawnObject(x, z);
     }
 }
