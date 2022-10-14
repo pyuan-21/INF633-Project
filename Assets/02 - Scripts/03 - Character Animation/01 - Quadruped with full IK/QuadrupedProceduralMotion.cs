@@ -163,16 +163,20 @@ public class QuadrupedProceduralMotion : MonoBehaviour
         }
 
         /*
-         * In this layer, we need to refine the position and rotation of the hips based on the ground. Without this part, the animal would not lift its root body when walking on high terrains.
+         * In this layer, we need to refine the position and rotation of the hips based on the ground.
+         * Without this part, the animal would not lift its root body when walking on high terrains.
          * First, try to use the hit information to modify hips.position and move it up when you are in a higher ground.
-         * Then, use also this information (normalTerrain) to rotate the root body and place it parallel to the ground. You can use Quaternion.FromToRotation() for that.
-         * When you have the angle that you want to have in your root body, you can place it directly, or use some interpolation technique to go smoothly to that value, in order to have less drastical movements.
+         * Then, use also this information (normalTerrain) to rotate the root body and place it parallel to the ground. 
+         * You can use Quaternion.FromToRotation() for that.
+         * When you have the angle that you want to have in your root body, you can place it directly, 
+         * or use some interpolation technique to go smoothly to that value, in order to have less drastical movements.
          */
 
         // START TODO ###################
 
-        // hips.position = ...
-        // hips.rotation = ...
+        hips.position = new Vector3(hips.position.x, constantHipsPosition.y + hit.point.y, hips.position.z);
+
+        hips.rotation *= Quaternion.FromToRotation(hips.rotation * Vector3.up, normalTerrain);
 
         // END TODO ###################
     }
@@ -228,15 +232,21 @@ public class QuadrupedProceduralMotion : MonoBehaviour
          * First, we need to get goalWorldLookDir: the position of the goal with respect to the head transform (you can use Debug.DrawRay() to debug it).
          * Use InverseTransformDirection() and headbone.parent to transform it with respect to the parent of the head (goalLocalLookDir).
          * Use RotateTowards() to have Vector3.forward always looking to goalLocalLookDir.
-         * Finally, define targetLocalRotation: The target local angle for your head. The forward axis (along the bone) will need to point to the object. To do this, you can use Quaternion.LookRotation().
+         * Finally, define targetLocalRotation: The target local angle for your head. The forward axis (along the bone) will need to point to the object. 
+         * To do this, you can use Quaternion.LookRotation().
          */
 
         // START TODO ###################
 
-        // goalWorldLookDir = ...
-        // goalLocalLookDir = ...
+        goalWorldLookDir = Vector3.Normalize(goal.position - headBone.position);
 
-        Quaternion targetLocalRotation = Quaternion.identity; // Change!
+        Debug.DrawLine(headBone.position, goal.position, Color.red);
+
+        goalLocalLookDir = headBone.parent.InverseTransformDirection(goalWorldLookDir);
+
+        var newDir = Vector3.RotateTowards(Vector3.forward, goalLocalLookDir, 0f, 0f);
+
+        Quaternion targetLocalRotation = Quaternion.LookRotation(newDir);
 
         // END TODO ###################
 

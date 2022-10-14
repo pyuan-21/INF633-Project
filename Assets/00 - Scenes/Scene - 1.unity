@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.43667564, g: 0.48427135, b: 0.5645232, a: 1}
+  m_IndirectSpecularColor: {r: 0.4366757, g: 0.48427194, b: 0.5645252, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1534,7 +1534,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1525859051}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 269.88, y: 1.6546326, z: 52.19}
+  m_LocalPosition: {x: 269.88, y: 1.66, z: 52.19}
   m_LocalScale: {x: 0.56965, y: 0.56965, z: 0.56965}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2291,6 +2291,36 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1688669856}
     m_Modifications:
+    - target: {fileID: 2954251902850376964, guid: 292e0cc1c13240549bc0ea73726cca30,
+        type: 3}
+      propertyPath: liftingHeight
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2954251902850376964, guid: 292e0cc1c13240549bc0ea73726cca30,
+        type: 3}
+      propertyPath: isUsinglifting
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2954251902890950202, guid: 292e0cc1c13240549bc0ea73726cca30,
+        type: 3}
+      propertyPath: liftingHeight
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2954251902890950202, guid: 292e0cc1c13240549bc0ea73726cca30,
+        type: 3}
+      propertyPath: isUsinglifting
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2954251903069469998, guid: 292e0cc1c13240549bc0ea73726cca30,
+        type: 3}
+      propertyPath: liftingHeight
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2954251903069469998, guid: 292e0cc1c13240549bc0ea73726cca30,
+        type: 3}
+      propertyPath: isUsinglifting
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2954251903643962278, guid: 292e0cc1c13240549bc0ea73726cca30,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2306,6 +2336,21 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 2.35
       objectReference: {fileID: 0}
+    - target: {fileID: 2954251904603069286, guid: 292e0cc1c13240549bc0ea73726cca30,
+        type: 3}
+      propertyPath: liftingHeight
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2954251904603069286, guid: 292e0cc1c13240549bc0ea73726cca30,
+        type: 3}
+      propertyPath: isUsinglifting
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8107060311548940690, guid: 292e0cc1c13240549bc0ea73726cca30,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8107060311548940698, guid: 292e0cc1c13240549bc0ea73726cca30,
         type: 3}
       propertyPath: m_Name
@@ -2316,6 +2361,16 @@ PrefabInstance:
       propertyPath: goal
       value: 
       objectReference: {fileID: 1525859055}
+    - target: {fileID: 8107060311548940700, guid: 292e0cc1c13240549bc0ea73726cca30,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8107060311548940780, guid: 292e0cc1c13240549bc0ea73726cca30,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8107060311549103610, guid: 292e0cc1c13240549bc0ea73726cca30,
         type: 3}
       propertyPath: m_RootOrder
