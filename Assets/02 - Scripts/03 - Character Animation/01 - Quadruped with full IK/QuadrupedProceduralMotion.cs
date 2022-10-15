@@ -67,13 +67,15 @@ public class QuadrupedProceduralMotion : MonoBehaviour
     // Update is called every frame, if the MonoBehaviour is enabled.
     private void Update()
     {
-        RootMotion();
+        if (goal != null)
+            RootMotion();
     }
 
     // LateUpdate is called after all Update functions have been called.
     private void LateUpdate()
     {
-        TrackHead();
+        if (goal != null)
+            TrackHead();
         TailUpdate();
         RootAdaptation();
     }

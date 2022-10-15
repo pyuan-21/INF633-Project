@@ -46,13 +46,16 @@ public class Animal : MonoBehaviour
 
 
     // pyuan
+    [HideInInspector]
+    public long id;
     public float maxSpeed = 0.5f;
-    public Transform currentGoal;
+    public Transform referGoal;
     public float maxMovingStraightDis = 10;
 
+    private Transform currentGoal;
     private float keepRotatingAngle = 0;
-    private float keepMovingDis = 0;
-    private bool isMovingToFood;
+    private float keepMovingDistance = 0;
+    private bool isStopMoving;
 
     void Start()
     {
@@ -68,13 +71,88 @@ public class Animal : MonoBehaviour
         if (renderer != null)
             mat = renderer.material;
 
-        isMovingToFood = false;
-        currentGoal.SetParent(null);
+        isStopMoving = false;
+
+        // pyuan Look at here, currentGoal is not correct
+
+        GameObject goalParent = GameObject.Find("Goals");
+        GameObject obj = new GameObject(gameObject.name + "_CurrentGoal" + id);
+        obj.transform.SetParent(goalParent.transform);
+        currentGoal = obj.transform;
+        currentGoal.position = referGoal.position;
+        GetComponent<QuadrupedProceduralMotion>().goal = currentGoal;
+
+        // create four foot targets
+        CreateFootTargets();
+    }
+
+    private void CreateFootTargets()
+    {
+        var qpm = GetComponent<QuadrupedProceduralMotion>();
+        FootStepper[] foots = { qpm.frontLeftFoot, qpm.frontRightFoot, qpm.backLeftFoot, qpm.backRightFoot };
+        string[] names = { "Front Left Leg", "Front Right Leg", "Back Left Leg", "Back Right Leg" };
+
+        for (int i = 0; i < foots.Length; i++)
+        {
+            GameObject footParent = GameObject.Find("FootTargets");
+            GameObject obj = Instantiate(foots[i].gameObject);
+            obj.name = foots[i].gameObject.name + "_animal_" + id;
+            obj.transform.SetParent(footParent.transform);
+            obj.transform.position = foots[i].transform.position;
+            obj.transform.localScale = foots[i].transform.localScale;
+            obj.transform.GetComponent<MeshRenderer>().enabled = false;
+            foots[i].gameObject.SetActive(false); // foots[i] is the old reference!
+
+            if (i == 0)
+                qpm.frontLeftFoot = obj.GetComponent<FootStepper>();
+            if (i == 1)
+                qpm.frontRightFoot = obj.GetComponent<FootStepper>();
+            if (i == 2)
+                qpm.backLeftFoot = obj.GetComponent<FootStepper>();
+            if (i == 3)
+                qpm.backRightFoot = obj.GetComponent<FootStepper>();
+
+            qpm.frontLeftFoot.gameObject.SetActive(true);
+            qpm.frontRightFoot.gameObject.SetActive(true);
+            qpm.backLeftFoot.gameObject.SetActive(true);
+            qpm.backRightFoot.gameObject.SetActive(true);
+
+            // bind to correct target
+            GameObject leg = FindGameObject(names[i], gameObject);
+            leg.GetComponent<FabricIKQuadruped>().target = obj.transform;
+        }
+
+    }
+
+    private GameObject FindGameObject(string name, GameObject parent)
+    {
+        List<GameObject> objs = new List<GameObject>();
+        objs.Add(parent);
+        while (objs.Count>0)
+        {
+            GameObject current = objs[objs.Count - 1];
+            objs.RemoveAt(objs.Count - 1);
+
+            if (current.name == name)
+                return current;
+            else
+            {
+                if (current.transform.childCount > 0)
+                {
+                    for(int i = 0; i < current.transform.childCount; i++)
+                    {
+                        objs.Add(current.transform.GetChild(i).gameObject);
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     private void OnDestroy()
     {
-        Destroy(currentGoal.gameObject);
+        if (currentGoal != null)
+            Destroy(currentGoal.gameObject);
     }
 
     void Update()
@@ -106,16 +184,18 @@ public class Animal : MonoBehaviour
             if (energy > maxEnergy)
                 energy = maxEnergy;
 
-            genetic_algo.addOffspring(this);
-
-            isMovingToFood = false; // need to update next food position
+            //pyuan uncomment below code, cause I don;t want to more than one creature when testing
+            //genetic_algo.addOffspring(this);
+            keepRotatingAngle = 0; // first to give a chance to rotate
         }
 
         // If the energy is below 0, the animal dies.
         if (energy < 0)
         {
-            energy = 0.0f;
-            genetic_algo.removeAnimal(this);
+            //pyuan uncomment below code, cause I want to know what issues are
+            //energy = 0.0f;
+            //genetic_algo.removeAnimal(this);
+            //isStopMoving = true;
         }
 
         // Update the color of the animal as a function of the energy that it contains.
@@ -123,7 +203,7 @@ public class Animal : MonoBehaviour
             mat.color = Color.white * (energy / maxEnergy);
 
         // pyuan
-        if(!isMovingToFood)
+        if (!isStopMoving)
         {
             // find next food position
 
@@ -137,23 +217,28 @@ public class Animal : MonoBehaviour
             // output[0] is [0,1] -> [-1,1]
             float result = (output[0] * 2.0f - 1.0f);
 
-            bool isKeepMovingStraight = false;
+            bool condition = MathF.Abs(result) <= 0.1f || keepMovingDistance < 20 || Mathf.Abs(keepRotatingAngle) >= 360; // it tells animal should keep moving straight?
 
-            bool condition = MathF.Abs(result) <= 0.2f; // it tells animal should keep moving straight?
-
-            if (condition || keepRotatingAngle >= 360)
+            if (condition)
             {
-                keepRotatingAngle = 0;
-                keepMovingDis += maxSpeed;
+                // go straight 
                 Vector3 v = tfm.rotation * Vector3.forward * maxSpeed;
                 currentGoal.position += v;
+
+                keepMovingDistance += maxSpeed;
+
+                if (Mathf.Abs(keepRotatingAngle) >= 360)
+                    keepRotatingAngle = 0;
             }
             else
             {
+                if (keepMovingDistance >= 20)
+                    keepMovingDistance = 0; // give the chane next time to go
+
+                // turn around
                 // it seems food is not in animal's visual area
                 // we have two options, rotate or keep moving straight
                 // we can simple rotate
-                keepMovingDis = 0;
                 float angle = result * maxAngle;
                 keepRotatingAngle += angle;
                 Vector3 dir = currentGoal.position - transform.position;
@@ -163,14 +248,7 @@ public class Animal : MonoBehaviour
                 Vector3 newPos = transform.position + newDir * distance;
                 currentGoal.position = newPos;
             }
-            
-            //    float angle = result * maxAngle;
-            //tfm.Rotate(0.0f, angle, 0.0f);
-            //keepRotatingAngle += angle;
 
-            // pyuan: 4. Try find goal by using angle
-
-            //currentGoal 
         }
     }
 

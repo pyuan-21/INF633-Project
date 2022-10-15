@@ -21,8 +21,12 @@ public class GeneticAlgo : MonoBehaviour
     protected float width;
     protected float height;
 
+    private long animalID;
+
     void Start()
     {
+        animalID = 0;
+
         // Retrieve terrain.
         terrain = Terrain.activeTerrain;
         customTerrain = GetComponent<CustomTerrain>();
@@ -80,6 +84,9 @@ public class GeneticAlgo : MonoBehaviour
     public GameObject makeAnimal(Vector3 position)
     {
         GameObject animal = Instantiate(animalPrefab, transform);
+        long newAnimalID = animalID++;
+        animal.name = animalPrefab.name + "_" + newAnimalID;
+        animal.GetComponent<Animal>().id = newAnimalID;
         animal.GetComponent<Animal>().Setup(customTerrain, this);
         animal.transform.position = position;
         animal.transform.Rotate(0.0f, UnityEngine.Random.value * 360.0f, 0.0f);

@@ -25,11 +25,15 @@ public class FootStepper : MonoBehaviour
     // Flag to define when a leg is moving.
     public bool Moving;
 
+    public Transform owner;
     // Awake is called when the script instance is being loaded.
     void Awake()
     {
         // We put the steppers at the top of the hierarchy, to avoid other influences from the parent transforms and to see them better.
-        transform.SetParent(null);
+
+        Animal animal;
+        if (owner == null || !owner.TryGetComponent<Animal>(out animal))
+            transform.SetParent(null);
 
         // Adapt the legs just after starting the script.
         MoveLeg();
@@ -110,21 +114,28 @@ public class FootStepper : MonoBehaviour
 
         // START TODO ###################
 
-        RaycastHit hitInfo;
-        Vector3 raycastOrigin = homeTransform.position + Vector3.up * 99999;
-
-        if (Physics.Raycast(raycastOrigin, Vector3.down, out hitInfo))
-        {
-            endPos = hitInfo.point;
-            endNormal = hitInfo.normal;
-            return true;
-        }
-
-        // END TODO ###################
-
         endPos = Vector3.zero;
         endNormal = Vector3.zero;
-        return false;
+
+        bool isHit = false;
+        Vector3 raycastOrigin = homeTransform.position + Vector3.up * 99999;
+        RaycastHit[] hitInfos = Physics.RaycastAll(raycastOrigin, Vector3.down, Mathf.Infinity);
+        if (hitInfos.Length > 0)
+        {
+            for(int i = 0; i < hitInfos.Length; i++)
+            {
+                if(hitInfos[i].transform.CompareTag("Ground") || hitInfos[i].transform.gameObject.layer == LayerMask.NameToLayer("Ground"))
+                //pyuan- not working here
+                endPos = hitInfos[i].point;
+                endNormal = hitInfos[i].normal;
+                isHit = true;
+                break;
+            }
+        }
+        // END TODO ###################
+
+        
+        return isHit;
     }
 
     Vector3 QuadraticBezierLerp(Vector3 P0, Vector3 P1, Vector3 P2, float t)
