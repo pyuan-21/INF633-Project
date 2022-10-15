@@ -52,21 +52,22 @@ public class ShapeInstanceBrush : InstanceBrush
 
         if (shapeType == ListOfShape.GRID)
         {
-            for (float dz = -radius;  dz<= radius; dz++)
+         for (float zi = -radius; zi <= radius; zi += 10)
+        {
+            for (float xi = -radius; xi <= radius; xi += 10)
             {
-                for (float dx = -radius; dx <= radius;  dx++)
-                {
-                        spawnObject(x + dx, z + dx);
+                spawnObject(x + xi, z + zi);
 
-                }
             }
         }
-
-
-
-
-
-
     }
 }
+
+
+
+
+
+
+}
+
 
