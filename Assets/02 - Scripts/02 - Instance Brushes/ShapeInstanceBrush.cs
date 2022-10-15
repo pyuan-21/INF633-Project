@@ -6,6 +6,7 @@ public class ShapeInstanceBrush : InstanceBrush
 {
     public enum ListOfShape { BASIC, CIRCLE, SQUARE, GRID };
     public ListOfShape shapeType;
+    public float shape_size = 10f;
     public float max_height = 20f;
     public  float max_angle = 1f;
      
@@ -18,13 +19,15 @@ public class ShapeInstanceBrush : InstanceBrush
     public override void draw(float x, float z)
     {
 
-        
 
-          // altitude
+
+      
+        // height constraint
         float height = terrain.get(x, z);
-        if (height <= max_height/4) terrain.object_prefab = treesobjects[0];
-        if (height <= max_height/2 && height > max_height/4) terrain.object_prefab = treesobjects[1];
-        if (height <= max_height && height > max_height/2) terrain.object_prefab = treesobjects[2];
+        if (height <= max_height / 4 && treesobjects[0] != null) terrain.object_prefab = treesobjects[0];
+        if (height <= max_height / 2 && height > max_height / 4 && treesobjects[0] != null) terrain.object_prefab = treesobjects[1];
+        if (height <= max_height && height > max_height / 2 && treesobjects[0] != null) terrain.object_prefab = treesobjects[2];
+
 
 
         print(height+"|"+terrain.object_prefab);
@@ -38,25 +41,34 @@ public class ShapeInstanceBrush : InstanceBrush
 
         if (shapeType == ListOfShape.CIRCLE)
         {
-            float r = Random.Range(0f, radius);
+           
             float angle = Random.Range(0f, 2 * Mathf.PI);
-            spawnObject(x + r * Mathf.Sin(angle), z + r * Mathf.Cos(angle));
+            for (float dz = -radius; dz <= radius; dz += shape_size)
+            {
+                for (float dx = -radius; dx <= radius; dx += 10)
+                {
+                    spawnObject(x + radius* Mathf.Sin(angle), z + radius* Mathf.Cos(angle));
+
+                }
+            }
         }
 
         if (shapeType == ListOfShape.SQUARE)
         {
-            float x1 = Random.Range(-radius, radius);
-            float z1 = Random.Range(-radius, radius);
-            spawnObject(x + x1, z + z1);
+
+            spawnObject(x , z );
+            spawnObject(x + radius, z );
+            spawnObject(x , z + radius);
+            spawnObject(x + radius, z + radius);
         }
 
         if (shapeType == ListOfShape.GRID)
         {
-         for (float zi = -radius; zi <= radius; zi += 10)
+         for (float dz = -radius; dz <= radius; dz += shape_size)
         {
-            for (float xi = -radius; xi <= radius; xi += 10)
+            for (float dx = -radius; dx <= radius; dx += shape_size)
             {
-                spawnObject(x + xi, z + zi);
+                spawnObject(x + dx, z + dz);
 
             }
         }
