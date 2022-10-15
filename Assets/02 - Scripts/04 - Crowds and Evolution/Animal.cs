@@ -44,6 +44,16 @@ public class Animal : MonoBehaviour
     // Renderer.
     private Material mat = null;
 
+
+    // pyuan
+    public float maxSpeed = 0.5f;
+    public Transform currentGoal;
+    public float maxMovingStraightDis = 10;
+
+    private float keepRotatingAngle = 0;
+    private float keepMovingDis = 0;
+    private bool isMovingToFood;
+
     void Start()
     {
         // Network: 1 input per receptor, 1 output per actuator.
@@ -57,6 +67,14 @@ public class Animal : MonoBehaviour
         MeshRenderer renderer = GetComponentInChildren<MeshRenderer>();
         if (renderer != null)
             mat = renderer.material;
+
+        isMovingToFood = false;
+        currentGoal.SetParent(null);
+    }
+
+    private void OnDestroy()
+    {
+        Destroy(currentGoal.gameObject);
     }
 
     void Update()
@@ -89,6 +107,8 @@ public class Animal : MonoBehaviour
                 energy = maxEnergy;
 
             genetic_algo.addOffspring(this);
+
+            isMovingToFood = false; // need to update next food position
         }
 
         // If the energy is below 0, the animal dies.
@@ -102,15 +122,56 @@ public class Animal : MonoBehaviour
         if (mat != null)
             mat.color = Color.white * (energy / maxEnergy);
 
-        // 1. Update receptor.
-        UpdateVision();
+        // pyuan
+        if(!isMovingToFood)
+        {
+            // find next food position
 
-        // 2. Use brain.
-        float[] output = brain.getOutput(vision);
+            // 1. Update receptor.
+            UpdateVision();
 
-        // 3. Act using actuators.
-        float angle = (output[0] * 2.0f - 1.0f) * maxAngle;
-        tfm.Rotate(0.0f, angle, 0.0f);
+            // 2. Use brain.
+            float[] output = brain.getOutput(vision);
+
+            // 3. Act using actuators.
+            // output[0] is [0,1] -> [-1,1]
+            float result = (output[0] * 2.0f - 1.0f);
+
+            bool isKeepMovingStraight = false;
+
+            bool condition = MathF.Abs(result) <= 0.2f; // it tells animal should keep moving straight?
+
+            if (condition || keepRotatingAngle >= 360)
+            {
+                keepRotatingAngle = 0;
+                keepMovingDis += maxSpeed;
+                Vector3 v = tfm.rotation * Vector3.forward * maxSpeed;
+                currentGoal.position += v;
+            }
+            else
+            {
+                // it seems food is not in animal's visual area
+                // we have two options, rotate or keep moving straight
+                // we can simple rotate
+                keepMovingDis = 0;
+                float angle = result * maxAngle;
+                keepRotatingAngle += angle;
+                Vector3 dir = currentGoal.position - transform.position;
+                float distance = dir.magnitude;
+                dir = dir.normalized;
+                Vector3 newDir = Quaternion.AngleAxis(angle, Vector3.up) * dir;
+                Vector3 newPos = transform.position + newDir * distance;
+                currentGoal.position = newPos;
+            }
+            
+            //    float angle = result * maxAngle;
+            //tfm.Rotate(0.0f, angle, 0.0f);
+            //keepRotatingAngle += angle;
+
+            // pyuan: 4. Try find goal by using angle
+
+            //currentGoal 
+        }
     }
 
     /// <summary>

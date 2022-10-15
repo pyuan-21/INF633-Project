@@ -15,7 +15,7 @@ public class GeneticAlgo : MonoBehaviour
     public float vegetationGrowthRate = 1.0f;
     public float currentGrowth;
 
-    private List<GameObject> animals;
+    protected List<GameObject> animals;
     protected Terrain terrain;
     protected CustomTerrain customTerrain;
     protected float width;

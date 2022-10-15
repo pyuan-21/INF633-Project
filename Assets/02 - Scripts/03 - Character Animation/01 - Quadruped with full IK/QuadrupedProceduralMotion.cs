@@ -66,7 +66,7 @@ public class QuadrupedProceduralMotion : MonoBehaviour
 
     // Update is called every frame, if the MonoBehaviour is enabled.
     private void Update()
-    {        
+    {
         RootMotion();
     }
 

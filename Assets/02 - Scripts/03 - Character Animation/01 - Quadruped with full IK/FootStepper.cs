@@ -8,6 +8,7 @@ public class FootStepper : MonoBehaviour
     public bool isUsinglifting = false;
     [Range(0, 1)]
     public float liftingHeight;
+    public float midPointRatio = 0.5f;
 
     [Header("Stepper Settings")]
     public Transform homeTransform; // The position and rotation from which we want to stay in range (represented as the blue chip).
@@ -158,7 +159,9 @@ public class FootStepper : MonoBehaviour
         // Initialize the time.
         float timeElapsed = 0;
 
-        Vector3 midPos = (startPos + endPos) * 0.5f + Vector3.up * liftingHeight;
+        Vector3 offset = endPos - startPos;
+        float offsetLen = offset.magnitude;
+        Vector3 midPos = startPos + offset.normalized * offsetLen * midPointRatio + Vector3.up * liftingHeight;
         
         do
         {
