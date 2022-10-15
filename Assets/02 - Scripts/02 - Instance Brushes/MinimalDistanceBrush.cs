@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MinimalDistanceBrush : InstanceBrush
 {
-    public float mindistance = 15f;
+    public float mindistance = 10f;
 
 
     public bool checkMinDistance(float x,float z)
@@ -18,10 +18,16 @@ public class MinimalDistanceBrush : InstanceBrush
             distance = Mathf.Min(distance, Mathf.Sqrt((objLoc.x - x) * (objLoc.x - x) + (objLoc.z - z) * (objLoc.z - z)));
         }
 
-        print(distance);
+       
 
-        if (distance < mindistance) return false;
-        else return true;
+        if (distance < mindistance)
+        {
+            print(distance+ "you can't place the object");
+            return false;
+        }
+        else {
+            print(distance+"OK");
+            return true; }
     }
     public override void draw(float x, float z)
     {

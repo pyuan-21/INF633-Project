@@ -19,14 +19,14 @@ public class HeightBaseBrush : InstanceBrush
         // altitude
         float height = terrain.get(x, z);
         if (height <= max_height / 4 && treesobjects[0]!=null) terrain.object_prefab = treesobjects[0];
-        if (height <= max_height / 2 && height > max_height / 4 && treesobjects[0] != null) terrain.object_prefab = treesobjects[1];
-        if (height <= max_height && height > max_height / 2 && treesobjects[0] != null) terrain.object_prefab = treesobjects[2];
+        if (height <= max_height / 2 && height > max_height / 4 && treesobjects[1] != null) terrain.object_prefab = treesobjects[1];
+        if (height <= max_height && height > max_height / 2 && treesobjects[2] != null) terrain.object_prefab = treesobjects[2];
 
-
-        print(height + "|" + terrain.object_prefab);
 
         // steepness
         if (terrain.getSteepness(x, z) < max_angle)  spawnObject(x, z);
+
+        print(height + "|" + terrain.getSteepness(x, z)+"|"+ terrain.object_prefab);
     }
 }
 
