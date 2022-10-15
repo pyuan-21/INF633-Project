@@ -40,7 +40,7 @@ public class ShapeInstanceBrush : InstanceBrush
         {
             float r = Random.Range(0f, radius);
             float angle = Random.Range(0f, 2 * Mathf.PI);
-            spawnObject(x + r * Mathf.Cos(angle), z + r * Mathf.Sin(angle));
+            spawnObject(x + r * Mathf.Sin(angle), z + r * Mathf.Cos(angle));
         }
 
         if (shapeType == ListOfShape.SQUARE)
