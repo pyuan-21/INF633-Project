@@ -64,6 +64,16 @@ public class Animal : MonoBehaviour
 
         responder = transform.GetComponent<Responder>();
     }
+    public void UpdateGrass()
+    {
+        for(int i = 0; i < detailSize.x; i++)
+        {
+            for(int j = 0; j < detailSize.y; j++)
+            {
+                terrain.UpdateDetail(i, j, details[j, i]);
+            }
+        }
+    }
 
     void Update()
     {
@@ -90,6 +100,9 @@ public class Animal : MonoBehaviour
         {
             // Eat (remove) the grass and gain energy.
             details[dy, dx] = 0;
+
+            //todo
+
             energy += gainEnergy;
             if (energy > maxEnergy)
                 energy = maxEnergy;
@@ -128,6 +141,8 @@ public class Animal : MonoBehaviour
                 responder.Reaction(result);
             }
         }
+
+        UpdateGrass();
     }
 
     /// <summary>

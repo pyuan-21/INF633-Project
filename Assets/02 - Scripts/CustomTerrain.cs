@@ -302,4 +302,9 @@ public class CustomTerrain : MonoBehaviour {
         }
         terrain_data.treeInstances = newTrees.ToArray();
     }
+
+    public void UpdateDetail(int x, int y, int value)
+    {
+        detail_layer[x, y] = value;
+    }
 }
