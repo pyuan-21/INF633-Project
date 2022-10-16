@@ -37,6 +37,8 @@ public class CustomTerrain : MonoBehaviour {
 
     [SerializeField] Camera cam;
 
+    private bool changed = false;
+
     // Initialization
     void Start () {
         if (!terrain)
@@ -95,6 +97,12 @@ public class CustomTerrain : MonoBehaviour {
             }
         }
         drawTarget(hit_loc, do_draw_target);
+
+        if (changed)
+        {
+            changed = false;
+            saveDetails();// pyuan- maybe an issue of performance
+        }
     }
 
     // Draw the brush marker on the terrain
@@ -303,8 +311,9 @@ public class CustomTerrain : MonoBehaviour {
         terrain_data.treeInstances = newTrees.ToArray();
     }
 
-    public void UpdateDetail(int x, int y, int value)
+    public void UpdateDetail(int x, int y, int val)
     {
-        detail_layer[x, y] = value;
+        detail_layer[x, y] = val;
+        changed = true;
     }
 }

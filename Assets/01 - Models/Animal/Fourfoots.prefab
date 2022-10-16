@@ -7040,7 +7040,7 @@ MonoBehaviour:
   swapStrength: 10
   mutateStrength: 0.5
   maxEnergy: 10
-  lossEnergy: 0.02
+  lossEnergy: 0.01
   gainEnergy: 10
   maxVision: 20
   stepAngle: 10

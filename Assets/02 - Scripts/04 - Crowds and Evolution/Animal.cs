@@ -64,16 +64,7 @@ public class Animal : MonoBehaviour
 
         responder = transform.GetComponent<Responder>();
     }
-    public void UpdateGrass()
-    {
-        for(int i = 0; i < detailSize.x; i++)
-        {
-            for(int j = 0; j < detailSize.y; j++)
-            {
-                terrain.UpdateDetail(i, j, details[j, i]);
-            }
-        }
-    }
+
 
     void Update()
     {
@@ -87,6 +78,8 @@ public class Animal : MonoBehaviour
             UpdateSetup();
             return;
         }
+        UpdateSetup(); // make sure the newest data
+
 
         // Retrieve animal location in the heighmap
         int dx = (int)((tfm.position.x / terrainSize.x) * detailSize.x);
@@ -100,8 +93,7 @@ public class Animal : MonoBehaviour
         {
             // Eat (remove) the grass and gain energy.
             details[dy, dx] = 0;
-
-            //todo
+            terrain.UpdateDetail(dy, dx, 0); // update grass of terrain
 
             energy += gainEnergy;
             if (energy > maxEnergy)
@@ -141,8 +133,6 @@ public class Animal : MonoBehaviour
                 responder.Reaction(result);
             }
         }
-
-        UpdateGrass();
     }
 
     /// <summary>
