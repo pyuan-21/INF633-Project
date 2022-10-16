@@ -151,16 +151,23 @@ public class QuadrupedProceduralMotion : MonoBehaviour
     private void RootAdaptation()
     {
         // Origin of the ray.
+        bool isHit = false;
+        bool condition = false;
         Vector3 raycastOrigin = groundChecker.position;
-
-        // The ray information gives you where you hit and the normal of the terrain in that location.
-        if (Physics.Raycast(raycastOrigin, -transform.up, out RaycastHit hit, Mathf.Infinity))
+        RaycastHit[] hitInfos = Physics.RaycastAll(raycastOrigin, Vector3.down, Mathf.Infinity);
+        if (hitInfos.Length > 0)
         {
-            if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Ground"))
+            for (int i = 0; i < hitInfos.Length; i++)
             {
-                posHit = hit.point;
-                distanceHit = hit.distance;
-                normalTerrain = hit.normal;
+                if (hitInfos[i].transform.CompareTag("Ground") || hitInfos[i].transform.gameObject.layer == LayerMask.NameToLayer("Ground"))
+                {
+                    posHit = hitInfos[i].point;
+                    distanceHit = hitInfos[i].distance;
+                    normalTerrain = hitInfos[i].normal;
+                    isHit = true;
+                    condition = Mathf.Abs(constantHipsPosition.y + posHit.y - hips.position.y) <= 10; // pyuan- advoid body(hips) climb on the top of "trees"
+                    break;
+                }
             }
         }
 
@@ -176,9 +183,10 @@ public class QuadrupedProceduralMotion : MonoBehaviour
 
         // START TODO ###################
 
-        hips.position = new Vector3(hips.position.x, constantHipsPosition.y + hit.point.y, hips.position.z);
+        if (isHit && condition)
+            hips.position = new Vector3(hips.position.x, constantHipsPosition.y + posHit.y, hips.position.z);
 
-        hips.rotation *= Quaternion.FromToRotation(hips.rotation * Vector3.up, normalTerrain);
+        //hips.rotation *= Quaternion.FromToRotation(hips.rotation * Vector3.up, normalTerrain);
 
         // END TODO ###################
     }

@@ -200,9 +200,16 @@ public class CustomTerrain : MonoBehaviour {
     }
 
     // Get dimensions of the heightmap grid
-    public Vector3 gridSize() {
+    public Vector3 gridSize()
+    {
         return new Vector3(heightmap_width, 0.0f, heightmap_height);
     }
+
+    public Vector2Int gridSizeInt()
+    {
+        return new Vector2Int(heightmap_width, heightmap_height);
+    }
+
     // Get real dimensions of the terrain (world space)
     public Vector3 terrainSize() {
         return terrain_size;

@@ -90,6 +90,8 @@ public class GeneticAlgo : MonoBehaviour
         animal.GetComponent<Animal>().Setup(customTerrain, this);
         animal.transform.position = position;
         animal.transform.Rotate(0.0f, UnityEngine.Random.value * 360.0f, 0.0f);
+        Responder responder = animal.GetComponent<Responder>();
+        responder?.Init();
         return animal;
     }
 

@@ -31,9 +31,15 @@ public class FootStepper : MonoBehaviour
     {
         // We put the steppers at the top of the hierarchy, to avoid other influences from the parent transforms and to see them better.
 
-        Animal animal;
-        if (owner == null || !owner.TryGetComponent<Animal>(out animal))
+        Animal animal = null;
+        if (owner == null)
             transform.SetParent(null);
+        else
+        {
+            owner.TryGetComponent<Animal>(out animal);
+            if (animal == null || !animal.enabled)
+                transform.SetParent(null);
+        }
 
         // Adapt the legs just after starting the script.
         MoveLeg();
@@ -118,18 +124,20 @@ public class FootStepper : MonoBehaviour
         endNormal = Vector3.zero;
 
         bool isHit = false;
-        Vector3 raycastOrigin = homeTransform.position + Vector3.up * 99999;
+        Vector3 raycastOrigin = homeTransform.position + Vector3.up * heightOffset;
         RaycastHit[] hitInfos = Physics.RaycastAll(raycastOrigin, Vector3.down, Mathf.Infinity);
         if (hitInfos.Length > 0)
         {
             for(int i = 0; i < hitInfos.Length; i++)
             {
                 if(hitInfos[i].transform.CompareTag("Ground") || hitInfos[i].transform.gameObject.layer == LayerMask.NameToLayer("Ground"))
-                //pyuan- not working here
-                endPos = hitInfos[i].point;
-                endNormal = hitInfos[i].normal;
-                isHit = true;
-                break;
+                {
+                    //endPos = new Vector3(hitInfos[i].point.x, endPos.y, hitInfos[i].point.z);
+                    endPos = hitInfos[i].point;
+                    endNormal = hitInfos[i].normal;
+                    isHit = true;
+                    break;
+                }
             }
         }
         // END TODO ###################
@@ -207,7 +215,6 @@ public class FootStepper : MonoBehaviour
                 // controlled by users
                 //Debug.Log("start: " + startPos.y + ", mid: " + midPos.y + ", endPos: " + endPos.y);
                 transform.position = QuadraticBezierLerp(startPos, midPos, endPos, normalizedTime);
-                //pyuan-21 to test above codes
             }
 
 
