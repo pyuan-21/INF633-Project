@@ -23,6 +23,8 @@ public class GeneticAlgo : MonoBehaviour
 
     private long animalID;
 
+    public int maxAnimalSize = 500;
+
     void Start()
     {
         animalID = 0;
@@ -114,6 +116,8 @@ public class GeneticAlgo : MonoBehaviour
     /// <param name="parent"></param>
     public void addOffspring(Animal parent)
     {
+        if (animals.Count >= maxAnimalSize)
+            return;
         GameObject animal = makeAnimal(parent.transform.position);
         animal.GetComponent<Animal>().InheritBrain(parent.GetBrain(), true);
         animals.Add(animal);
