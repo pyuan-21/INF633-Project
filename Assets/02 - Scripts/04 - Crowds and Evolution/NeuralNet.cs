@@ -7,8 +7,8 @@ using UnityEngine.UI;
 public class SimpleNeuralNet
 {
 
-    private List<float[,]> allWeights;
-    private List<float[]> allResults;
+    protected List<float[,]> allWeights;
+    protected List<float[]> allResults;
 
     public SimpleNeuralNet(SimpleNeuralNet other)
     {
@@ -103,5 +103,4 @@ public class SimpleNeuralNet
             }
         }
     }
-
 }

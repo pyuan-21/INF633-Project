@@ -25,7 +25,7 @@ public class Animal : MonoBehaviour
     public int nEyes = 5;
 
     private int[] networkStruct;
-    private SimpleNeuralNet brain = null;
+    private CustomNerualNet brain = null;
 
     // Terrain.
     private CustomTerrain terrain = null;
@@ -70,7 +70,7 @@ public class Animal : MonoBehaviour
     {
         // In case something is not initialized...
         if (brain == null)
-            brain = new SimpleNeuralNet(networkStruct);
+            brain = new CustomNerualNet(networkStruct);
         if (terrain == null)
             return;
         if (details == null)
@@ -194,13 +194,15 @@ public class Animal : MonoBehaviour
         details = terrain.getDetails();
     }
 
-    public void InheritBrain(SimpleNeuralNet other, bool mutate)
+    public void InheritBrain(CustomNerualNet other, bool mutate)
     {
-        brain = new SimpleNeuralNet(other);
+        brain = new CustomNerualNet(other);
         if (mutate)
-            brain.mutate(swapRate, mutateRate, swapStrength, mutateStrength);
+            brain.mutate();
+        //if (mutate)
+        //    brain.mutate(swapRate, mutateRate, swapStrength, mutateStrength);
     }
-    public SimpleNeuralNet GetBrain()
+    public CustomNerualNet GetBrain()
     {
         return brain;
     }

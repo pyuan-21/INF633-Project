@@ -202,7 +202,7 @@ public class Responder : MonoBehaviour
         Debug.Log("Result: " + result);
         // vision is almost 0 if food is near engouh to animal, then its value into the network and output is almost 0.5
         // then result is 0.5*2-1=0. almost 0
-        bool condition = MathF.Abs(result) <= 0.1f || keepMovingDistance < maxMovingStraightDis || Mathf.Abs(keepRotatingAngle) >= 360; // it tells animal should keep moving straight?
+        bool condition = MathF.Abs(result) <= 0.2f || keepMovingDistance < maxMovingStraightDis || Mathf.Abs(keepRotatingAngle) >= 360; // it tells animal should keep moving straight?
         bool forceRotate = false;
         if (condition)
         {
