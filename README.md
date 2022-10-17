@@ -11,5 +11,5 @@ Due to time limit, we haven't put:
  - distance that quadruped has already moved
  - angle that quadrued has already roated
  - probability to wait, turn around, move straight
- - etc.
+ - etc. \
 these factors as *INPUT* for the brain(*NeuralNet*), but we did use these factors in decision making.
