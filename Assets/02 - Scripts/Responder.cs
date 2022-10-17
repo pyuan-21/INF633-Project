@@ -36,6 +36,8 @@ public class Responder : MonoBehaviour
     [Range(0f, 360f)]
     public float casualRotatingAngle = 60f;
 
+    private bool isObserver = false;
+
     private void Test()
     {
         var goal = gameObject.GetComponent<QuadrupedProceduralMotion>().goal;
@@ -81,15 +83,18 @@ public class Responder : MonoBehaviour
         // create four foot targets
         CreateFootTargets();
 
+
+        var testCam = GameObject.Find("TestCamera");
         // just test codes:
-        GameObject testCam = GameObject.Find("TestCamera");
-        if (testCam != null && testCam.activeSelf)
+        if (testCam != null && testCam.activeSelf && testCam.transform.parent == null)
         {
+            // we only bind TestCamera to one creatures
             Vector3 pos = testCam.transform.position;
             Quaternion rot = testCam.transform.rotation;
             testCam.transform.SetParent(transform);
             testCam.transform.localPosition = pos;
             testCam.transform.localRotation = rot;
+            isObserver = true;
         }
 
         // Retrieve terrain.
@@ -330,5 +335,10 @@ public class Responder : MonoBehaviour
                 TurnAround(angle);
             }
         }
+    }
+
+    public bool IsObserver()
+    {
+        return isObserver;
     }
 }

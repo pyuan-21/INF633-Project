@@ -107,8 +107,11 @@ public class Animal : MonoBehaviour
         if (energy < 0)
         {
             energy = 0.0f;
-            genetic_algo.removeAnimal(this);
-            responder?.StopMoving();
+            if (!responder.IsObserver())
+            {
+                genetic_algo.removeAnimal(this);
+                responder?.StopMoving();
+            }
         }
 
         // Update the color of the animal as a function of the energy that it contains.
